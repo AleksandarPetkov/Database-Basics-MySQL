@@ -1,4 +1,4 @@
-USE osft_uni;
+USE soft_uni;
 #   Basic CRUD   #
 
 SELECT * FROM departments
@@ -72,3 +72,11 @@ WHERE NOT (
 `name` LIKE('D%')
 )
 ORDER BY `name`;
+
+CREATE VIEW v_employees_hired_after_2000 AS
+SELECT first_name, last_name
+FROM employees
+WHERE YEAR(hire_date) >= 2000;
+
+SELECT first_name, last_name FROM employees
+WHERE length(last_name) = 5;
