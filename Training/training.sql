@@ -80,3 +80,61 @@ WHERE YEAR(hire_date) >= 2000;
 
 SELECT first_name, last_name FROM employees
 WHERE length(last_name) = 5;
+
+USE geography;
+
+SELECT iso_code, country_name FROM countries
+WHERE country_name LIKE('%a%a%a%')
+ORDER BY iso_code;
+
+SELECT p.peak_name, r.river_name,
+LOWER(CONCAT(SUBSTRING(p.peak_name,1,CHAR_LENGTH(peak_name) - 1), r.river_name)) AS 'mix'
+FROM peaks AS p, rivers AS r
+WHERE RIGHT(p.peak_name, 1) = LEFT(r.river_name, 1)
+ORDER BY mix;
+
+use gringotts;
+
+SELECT COUNT(*) FROM wizzard_deposits;
+
+SELECT MAX(wd.magic_wand_size) AS 'longest_magic_size' FROM wizzard_deposits AS wd;
+
+SELECT deposit_group, MAX(wd.magic_wand_size) AS 'longest_magic_size' 
+FROM wizzard_deposits AS wd
+GROUP BY deposit_group
+ORDER BY MAX(wd.magic_wand_size) 
+, deposit_group;
+
+SELECT deposit_group FROM wizzard_deposits AS wd
+GROUP BY deposit_group
+ORDER BY AVG(wd.magic_wand_size)
+LIMIT 1;
+
+SELECT wd.deposit_group, SUM(wd.deposit_amount) AS 'total_sum'
+FROM wizzard_deposits AS wd
+GROUP BY deposit_group
+ORDER BY SUM(wd.deposit_amount);
+
+SELECT wd.deposit_group, SUM(wd.deposit_amount) AS 'total_sum'
+FROM wizzard_deposits AS wd
+WHERE wd.magic_wand_creator = 'Ollivander family'
+GROUP BY  wd.deposit_group
+HAVING SUM(wd.deposit_amount)  < 150000
+ORDER BY total_sum DESC;
+
+SELECT deposit_group, magic_wand_creator FROM wizzard_deposits
+GROUP BY deposit_group, magic_wand_creator;
+
+#   JOINS  #
+SELECT e.employee_id, e.job_title, a.address_id, a.address_text FROM employees AS e
+JOIN addresses AS a
+ON e.address_id = a.address_id
+ORDER BY  a.address_id
+LIMIT 5;
+
+SELECT e.employee_id, e.first_name FROM employees AS e
+LEFT JOIN employees_projects AS ep
+ON e.employee_id = ep.employee_id
+WHERE ep.project_id IS NULL
+ORDER BY employee_id DESC
+LIMIT 3
